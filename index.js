@@ -20,17 +20,29 @@ server.on('request', (req, res) => {
   res.write('<html>');
   res.write(`<h1>Tom Cruise Movies</h1>`);
   res.write(`<p>Search and filter a whole bunch of tom cruises hit movies!</p>`);
-  res.write('<ul>')
+  res.write('<ul>');
 
-  switch (urlObject.pathname) {
-    case '/':
-      // For Each Movie
-      getMovies().forEach(movie => {
+  // Retrieve the movies synchronously from the database
+  const movies = getMovies();
+
+  // Filter the movies
+  if(urlObject.query !== null ) {
+  // First we have to parse the query param from title=Some%20Title into { key: 'title', value: 'Some Title' }
+  let key = urlObject.query.substring(0, urlObject.query.indexOf('='));
+  let value = decodeURI(urlObject.query.substring(urlObject.query.indexOf('=') + 1, urlObject.query.length));
+
+  // Filter out the movies with a 1 liner!
+  movies
+  .filter(movie => movie[key].toUpperCase().includes(value.toUpperCase()))
+  .forEach(movie => res.write(`<li>${movie.Title}</li>`));
+
+  } else {
+    // No filter was presented Show all the movies
+    if(urlObject.pathname !== '\/favicon.ico') {
+      movies.forEach(movie => {
         res.write(`<li>${movie.Title}</li>`)
       });
-      break;
-    default:
-      res.write('<li>Sorry I didnt recognize that route!</li>');
+    }
   }
 
   res.write('</ul>')
