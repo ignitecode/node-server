@@ -1,0 +1,29 @@
+{
+  "name": "node-server",
+  "version": "1.0.0",
+  "description": "A basic nodejs HTTP server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 10000",
+    "start": "PORT=8000 node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ignitecode/node-server.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "javascript",
+    "server",
+    "http",
+    "request",
+    "response"
+  ],
+  "author": "cbartram",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ignitecode/node-server/issues"
+  },
+  "homepage": "https://github.com/ignitecode/node-server#readme"
+}
