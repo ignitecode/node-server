@@ -1,6 +1,6 @@
 const http = require('http') // Why didn't we have to npm install this?
 const urlParser = require('url');
-
+const fs = require('fs');
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer().listen(PORT);
@@ -16,28 +16,18 @@ server.on('request', (req, res) => {
   console.log('[INFO] Request URL: ', urlObject);
   console.log('[INFO] Path: ', urlObject.pathname);
 
+  // Write the intro HTML every time no matter the path
   res.write('<html>');
-  res.write(`<h1>Books & Movies App</h1>`);
-  res.write(`<h3>You have reached: ${urlObject.pathname}</h3>`);
+  res.write(`<h1>Tom Cruise Movies</h1>`);
+  res.write(`<p>Search and filter a whole bunch of tom cruises hit movies!</p>`);
   res.write('<ul>')
 
   switch (urlObject.pathname) {
     case '/':
-      res.write('<a href="/books">View Books</a>');
-      res.write('<br />');
-      res.write('<a href="/movies">View Movies</a>');
-      break;
-    case '/movies':
-      res.write('<li>Avengers</li>');
-      res.write('<li>Hulk</li>');
-      res.write('<li>Thor</li>');
-      res.write('<li><a href="/">Go Back</a></li>');
-      break;
-    case '/books':
-      res.write('<li>Harry Potter</li>');
-      res.write('<li>Pet Semetary</li>');
-      res.write('<li>Beowulf</li>');
-      res.write('<li><a href="/">Go Back</a></li>');
+      // For Each Movie
+      getMovies().forEach(movie => {
+        res.write(`<li>${movie.Title}</li>`)
+      });
       break;
     default:
       res.write('<li>Sorry I didnt recognize that route!</li>');
@@ -47,3 +37,13 @@ server.on('request', (req, res) => {
   res.write('</html>')
   res.end();
 });
+
+/**
+ * Returns a list of Tom cruise Movies
+ * after the data has been read from the makeshift
+ * database (data.json) file.
+ */
+const getMovies = () => {
+  const movies = fs.readFileSync('./data.json');
+  return JSON.parse(movies);
+}
